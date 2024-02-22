@@ -1,0 +1,59 @@
+HLT_triggers:
+  "2022_preEE":
+    DoubleMuon:
+      - Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8
+    DoubleEle:
+      - Ele23_Ele12_CaloIdL_TrackIdL_IsoVL
+    SingleMuon:
+      - IsoMu24
+    SingleEle:
+      - Ele30_WPTight_Gsf
+    MuonEG:
+      - Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ
+      - Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ
+      - Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ
+    
+
+  "2022_postEE":
+    DoubleMuon:
+      - Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8
+    DoubleEle:
+      - Ele23_Ele12_CaloIdL_TrackIdL_IsoVL
+    SingleMuon:
+      - IsoMu24
+    SingleEle:
+      - Ele30_WPTight_Gsf
+    MuonEG:
+      - Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ
+      - Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ
+      - Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ
+    
+  "2023_preBPix":
+    DoubleMuon:
+      - Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8
+    DoubleEle:
+      - Ele23_Ele12_CaloIdL_TrackIdL_IsoVL
+    SingleMuon:
+      - IsoMu24
+    SingleEle:
+      - Ele30_WPTight_Gsf
+    MuonEG:
+      - Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ
+      - Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ
+      - Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ
+    
+      
+  "2023_postBPix":
+    DoubleMuon:
+      - Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8
+    DoubleEle:
+      - Ele23_Ele12_CaloIdL_TrackIdL_IsoVL
+    SingleMuon:
+      - IsoMu24
+    SingleEle:
+      - Ele30_WPTight_Gsf
+    MuonEG:
+      - Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ
+      - Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ
+      - Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ
+    

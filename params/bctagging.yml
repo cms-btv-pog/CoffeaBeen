@@ -1,4 +1,4 @@
-Summer22EERun3:
+2022_preEE:
   DeepFlav:
     b:
       L: 0.0614
@@ -62,7 +62,7 @@ Summer22EERun3:
       T:
       - 0.358
       - 0.095
-Summer22Run3:
+2022_postEE:
   DeepFlav:
     b:
       L: 0.0583

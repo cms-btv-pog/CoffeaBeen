@@ -17,12 +17,10 @@ class CommBTVBaseProcessor(BaseProcessorABC):
     def __init__(self, cfg: Configurator):
         super().__init__(cfg)
 
-        self.proc_type = self.params["proc_type"]
-        self.isSyst= self.cfg["isSyst"]
-        self.isArray=self.cfg["isArray"]
-        self.year = self.cfg["year"]        
-        self.campaign = self.cfg["campaign"]
-         self.campaign["run_options]
+        # self.proc_type = self.params["proc_type"]
+        # self.isArray=self.cfg["isArray"]
+        #  self.campaign["run_options]/
+        print(self.params,self.cfg)
     def apply_object_preselection(self, variation):
         '''
         
@@ -52,8 +50,9 @@ class CommBTVBaseProcessor(BaseProcessorABC):
         self.events["JetGood"], self.jetGoodMask = jet_selection(
             self.events, "Jet", self.params, "LeptonGood"
         )
-        self.events["BJet_XXT"] = btagging(
-            self.events["JetGood"], self.params.bctagging.b.XXT[self.campaign])
+        print(self.params)
+        # self.events["BJet_XXT"] = btagging(
+            # self.events["JetGood"], self.params.bctagging[self.campaign].b.DeepFlav.XXT)
         # self.events["BJet_XT"] = btagging(
         #     self.events["JetGood"], self.params.btagging.T[self.campaign])
         # self.events["BJet_T"] = btagging(
@@ -67,7 +66,7 @@ class CommBTVBaseProcessor(BaseProcessorABC):
 
         self.events["nJet"] = ak.num(self.events.Jet)
         self.events["nJetGood"] = ak.num(self.events.JetGood)
-        self.events["nBJetGood"] = ak.num(self.events.BJetGood)
+        # self.events["nBJetGood"] = ak.num(self.events.BJetGood)
         # self.events["nfatjet"]   = ak.num(self.events.FatJetGood)
 
     # Function that defines common variables employed in analyses and save them as attributes of `events`
@@ -76,8 +75,8 @@ class CommBTVBaseProcessor(BaseProcessorABC):
     def define_common_variables_after_presel(self, variation):
 
         
-
-        self.events["dilep"] = get_dilepton(self.events.LeptonGood)
-        self.events["dilep_deltaR"] = self.events.dilep.deltaR
+        
+        self.events["JetGood_pt"] = self.events.JetGood.pt
+        # self.events["dilep_deltaR"] = self.events.ll.deltaR
 
         

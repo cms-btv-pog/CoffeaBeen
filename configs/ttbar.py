@@ -1,37 +1,39 @@
 from pocket_coffea.utils.configurator import Configurator
 from pocket_coffea.lib.cut_definition import Cut
-from pocket_coffea.lib.cut_functions import get_nObj_min, get_HLTsel
+from pocket_coffea.lib.cut_functions import get_nObj_min, get_HLTsel,get_nObj_eq
 from pocket_coffea.parameters.cuts import passthrough
 from pocket_coffea.parameters.histograms import *
-import workflow
-from workflow import CommBTVBaseProcessor
+import CommBTVbase
+from CommBTVbase import CommBTVBaseProcessor
 
-import CommonSelectors
-from CommonSelectors import *
+import CommonSelector
+from CommonSelector import *
 
 import cloudpickle
-cloudpickle.register_pickle_by_value(workflow)
-cloudpickle.register_pickle_by_value(CommonSelectors)
+cloudpickle.register_pickle_by_value(CommBTVbase)
+cloudpickle.register_pickle_by_value(CommonSelector)
 
 import os
-localdir = os.path.dirname(os.path.abspath(__file__))
-
+localdir = os.getcwd()
 # Loading default parameters
 from pocket_coffea.parameters import defaults
 default_parameters = defaults.get_default_parameters()
 defaults.register_configuration_dir("config_dir", localdir+"/params")
 
 parameters = defaults.merge_parameters_from_files(default_parameters,
-                                                  f"{localdir}/params/object_preselection.yaml",
-                                                  f"{localdir}/params/triggers.yaml",
-                                                  f"{localdir}/params/ctagging.yaml",
+                                                  f"{localdir}/params/object_preselection.yml",
+                                                  f"{localdir}/params/triggers.yml",
+                                                  f"{localdir}/params/bctagging.yml",
                                                   update=True)
 
 files_2022 = [
     f"{localdir}/datasets/Run3_2022_WtoLNu4Jets.json",
+    f"{localdir}/datasets/Run3_2022_TTToLNu2Q.json",
+    f"{localdir}/datasets/Run3_2022_TTTo2L2Nu.json",
+    f"{localdir}/datasets/Run3_2022_TTTo4Q.json",
 ]
 
-parameters["proc_type"] = "WLNu"
+# parameters["proc_type"] = "WLNu"
 cfg = Configurator(
     parameters = parameters,
     datasets = {
@@ -56,25 +58,26 @@ cfg = Configurator(
 
     workflow = CommBTVBaseProcessor,
 
-    skim = [get_HLTsel(primaryDatasets=["SingleMuon","SingleEle"]),
-            get_nObj_min(3, 20., "Jet")], # in default jet collection there are leptons. So we ask for 1lep+2jets=3Jet objects
+    skim = [get_HLTsel(primaryDatasets=["MuonEG"]),
+            get_nObj_min(1, 20., "Jet"),
+            ], 
 
     #preselections = [onelep_plus_met],
-    preselections = [lep_met_2jets],
+    # preselections = [lep_met_2jets],
+    preselections = [passthrough],
     categories = {
-        "baseline_1L2j": [passthrough],
-        "presel_Wlnu_2j": [wlnu_plus_2j],
-        "SR_Wlnu_2j_cj":  [wlnu_plus_2j,ctag_j1],
-        "SR_Wmunu_2j_cj": [wmunu_plus_2j,ctag_j1],
-        "SR_Welnu_2j_cj": [welnu_plus_2j,ctag_j1],
+        "ee":[get_nObj_eq(0, coll="MuonGood"),get_nObj_eq(2, coll="ElectronGood")],
+        "mumu":[get_nObj_eq(2, coll="MuonGood"),get_nObj_eq(0, coll="ElectronGood")],
+        "emu":[get_nObj_eq(1, coll="MuonGood"),get_nObj_eq(1, coll="ElectronGood")]
     },
+   
 
     weights = {
         "common": {
             "inclusive": ["genWeight","lumi","XS",
-                          "pileup",
-                          "sf_mu_id","sf_mu_iso",
-                          "sf_ele_reco","sf_ele_id",
+                        #   "pileup",
+                        #   "sf_mu_id","sf_mu_iso",
+                        #   "sf_ele_reco","sf_ele_id",
                           ],
             "bycategory" : {
             }
@@ -87,9 +90,9 @@ cfg = Configurator(
         "weights": {
             "common": {
                 "inclusive": [
-                    "pileup",
-                    "sf_mu_id", "sf_mu_iso",
-                    "sf_ele_reco", "sf_ele_id",
+                    # "pileup",
+                    # "sf_mu_id", "sf_mu_iso",
+                    # "sf_ele_reco", "sf_ele_id",
                 ],
                 "bycategory" : {
                 }
@@ -105,15 +108,14 @@ cfg = Configurator(
         **count_hist(name="nElectronGood", coll="ElectronGood",bins=5, start=0, stop=5),
         **count_hist(name="nMuonGood", coll="MuonGood",bins=5, start=0, stop=5),
         **count_hist(name="nJets", coll="JetGood",bins=8, start=0, stop=8),
-        **count_hist(name="nBJets", coll="BJetGood",bins=8, start=0, stop=8),
+        # **count_hist(name="nBJets", coll="BJetGood",bins=8, start=0, stop=8),
         **jet_hists(coll="JetGood", pos=0),
-        **jet_hists(coll="JetGood", pos=1),
+        # **jet_hists(coll="JetGood", pos=1),
 
        
 
         "nJet": HistConf( [Axis(field="nJet", bins=15, start=0, stop=15, label=r"nJet direct from NanoAOD")] ),
 
-        "dilep_nom_pt" : HistConf( [Axis(coll="dilep", field="pt", bins=100, start=0, stop=400, label=r"$p_T{\\ell\\ell}$ [GeV]")] ),
         
         
         "MET_pt": HistConf( [Axis(coll="MET", field="pt", bins=50, start=0, stop=200, label=r"MET $p_T$ [GeV]")] ),
@@ -124,10 +126,10 @@ cfg = Configurator(
 
 
 run_options = {
-    "executor"       : "parsl/condor",
+    "executor"       : "futures",
     "env"            : "conda",
     "workers"        : 1,
-    "scaleout"       : 10,
+    "scaleout"       : 5,
     "walltime"       : "00:60:00",
     "mem_per_worker" : 2, # For Parsl
     #"mem_per_worker" : "2GB", # For Dask
@@ -142,3 +144,4 @@ run_options = {
         ),
 
     }
+    
